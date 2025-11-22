@@ -21,29 +21,25 @@ IPA_MAP = {
     "ك": "k", "ک": "k", "گ": "g",
 
     # --- PRECISE MAPPINGS FOR STANDARD CH/J ---
-    # "Light" Dental/Alveolar sounds (Tongue touches teeth)
     "چ": "t̪͡ʃ̟",  
     "ج": "d̪͡ʒ̟",
 }
 
-# Pre-calculate sorted graphemes for longest-match tokenization
 SORTED_GRAPHEMES = sorted(IPA_MAP.keys(), key=len, reverse=True)
 
-# 3. Define IPA Vowels
 IPA_VOWELS = {
     "ä", "a", "o̞", "ɛ", "uː", "iː", "u", "ɪ", "aː", "ʔä", "ʊʔ"
 }
 
-# 4. Sonority Scale
 SONORITY_SCALE = {
     # Obstruents (1)
     "p": 1, "b": 1, "t": 1, "d": 1, "k": 1, "g": 1, "q": 1, "ʔ": 1,
     "tˤ": 1, "dˤ": 1,
 
-    # "Heavy" Postalveolar (English-like) - From Palatalized K/G
+    # "Heavy" Postalveolar (English-like)
     "t͡ʃ": 1, "d͡ʒ": 1,
 
-    # "Light" Dental - From Standard Ch/J
+    # "Light" Dental
     "t̪͡ʃ̟": 1, "d̪͡ʒ̟": 1,
 
     # Fricatives (2)

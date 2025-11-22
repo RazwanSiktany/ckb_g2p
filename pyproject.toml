@@ -4,9 +4,9 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ckb_g2p"
-version = "1.0.1"
+version = "2.0.0"
 authors = [
-  { name = "Razwan M. Haji", email = "your.email@example.com" },
+  {{ name = "Razwan M. Haji", email = "razwan.siktany778@gmail.com" }},
 ]
 description = "Central Kurdish Grapheme-to-Phoneme (G2P) converter and Syllabifier for TTS."
 readme = "README.md"
@@ -30,3 +30,5 @@ dependencies = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ckb_g2p"]
+# Ensure the CSV files in resources are included
+artifacts = ["src/ckb_g2p/resources/*.csv"]

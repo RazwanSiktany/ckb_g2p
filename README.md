@@ -1,38 +1,37 @@
 # Central Kurdish G2P (ckb_g2p)
 
-[![PyPI version](https://badge.fury.io/py/ckb_g2p.svg)](https://pypi.org/project/ckb-g2p/)
+[![PyPI version](https://img.shields.io/pypi/v/ckb_g2p)](https://pypi.org/project/ckb-g2p/)
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ckb-g2p.streamlit.app/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
-A linguistically accurate **Grapheme-to-Phoneme (G2P)** converter and **Syllabifier** for Central Kurdish (Sorani), designed specifically for modern Text-to-Speech (TTS) pipelines (VITS, FastSpeech2, etc.).
+A linguistically accurate **Grapheme-to-Phoneme (G2P)** converter and **Syllabifier** for Central Kurdish (Sorani). 
 
-## 🔗 Live Demos & Resources
+Designed specifically for training modern **Text-to-Speech (TTS)** models (VITS, FastSpeech2, Glow-TTS) by providing robust phonetization, stress marking, and syllable boundaries.
 
-| Project | Description | Links |
-| :--- | :--- | :--- |
-| **ckb_g2p** | Phonemizer & Syllabifier | [**Live G2P Demo**](https://ckb-g2p.streamlit.app/) • [GitHub](https://github.com/RazwanSiktany/ckb_g2p) • [PyPI](https://pypi.org/project/ckb-g2p/) |
-| **ckb-textify** | Text Normalizer (Prerequisite) | [**Live Normalizer Demo**](https://ckb-textify.streamlit.app/) • [GitHub](https://github.com/RazwanSiktany/ckb_textify) |
+## (کوردی) دەربارەی پڕۆژە
+
+ئەم پڕۆژەیە ئامرازێکی پێشکەوتووە بۆ گۆڕینی دەقی کوردی (سۆرانی) بۆ فۆنێم و بڕگە. بەتایبەت دیزاین کراوە بۆ سیستەمەکانی دروستکردنی دەنگ  و ڕاهێنانی مۆدێلەکانی زیرەکی دەستکرد.
+
 
 ---
 
-## ✨ Key Features
+## 🌟 Why Use This?
 
-This library handles the complex phonological rules that generic G2P tools miss:
+Generic G2P tools often fail on Kurdish phonology. `ckb_g2p` solves these specific challenges:
 
-1.  **Context-Aware Palatalization:**
-    * Distinguishes between the **Dental Affricates** (standard `چ` / `ج`) and **Postalveolar Affricates** (palatalized `ک` / `گ`).
-    * *Example:* `کێوار` → `t͡ʃɛ.wäɾ` (Heavy) vs `چێوار` → `t̪͡ʃ̟ɛ.wäɾ` (Light).
-2.  **Schwa (Bizroka) Insertion:**
-    * Automatically inserts `/ɪ/` to break illegal consonant clusters based on sonority rules.
-    * *Example:* `گرفت` (grft) → `gɪ.ɾɪft`.
-3.  **Advanced Syllabification:**
-    * Respects complex onsets (e.g., `kw`, `cy`) while splitting others correctly.
-    * *Example:* `ووشە` → `wu.ʃa`.
-4.  **Prosody & Stress (Configurable):**
-    * **Noun/Adj:** Stress on final syllable (`ˈ`).
-    * **Negative Verbs:** Stress shifts to initial syllable (e.g., `نەچوو` → `ˈna.t̪͡ʃ̟uː`).
-5.  **Foreign Text Support:**
-    * Powered by [ckb-textify](https://github.com/RazwanSiktany/ckb_textify). Automatically converts numbers (`1991`), symbols (`$`), and English text to Kurdish phonemes before processing.
+| Feature | Problem in Generic Tools | Solution in `ckb_g2p`                                                                                                           |
+| :--- | :--- |:--------------------------------------------------------------------------------------------------------------------------------|
+| **Palatalization** | Treats all 'k' and 'g' the same. | Distinguishes **Heavy** (Postalveolar `t͡ʃ`, `d͡ʒ`) vs **Light** (Dental `t̪͡ʃ̟`, `d̪͡ʒ̟`) based on vowel context.              |
+| **Schwa Insertion** | Fails on clusters like "grft". | Automatically inserts **Bizroka** (`/ɪ/`) to fix illegal consonant clusters (`gɪ.ɾɪft`).                                        |
+| **Geminate Consonants** | Merges double letters. | Preserves true geminates or splits them if phonologically required (e.g., `dat̪͡ʃɛnn` → `da.t̪͡ʃ̟ɛ.ˈnɪn`).                      |
+| **Stress (Prosody)** | Ignores stress. | Smartly assigns stress (`ˈ`). Handles **Negative Verb** shifts (`nachu` → `ˈna.t̪͡ʃ̟uː`) vs Nouns (`kurd` → `kurd`).            |
+| **Complex Onsets** | Incorrectly splits clusters. | Respects valid onsets like `kw` and `cy` (`wusha` → `wu.ʃa`).                                                                   |
+
+## 🔗 Live Demos
+
+* **G2P Playground:** [ckb-g2p.streamlit.app](https://ckb-g2p.streamlit.app/)
+* **Text Normalizer:** [ckb-textify.streamlit.app](https://ckb-textify.streamlit.app/)
 
 ---
 
@@ -42,16 +41,17 @@ This library handles the complex phonological rules that generic G2P tools miss:
 pip install ckb_g2p
 ```
 
+**Dependencies:** This library automatically installs `ckb-textify` for normalizing numbers (`1991` → `hazar...`), dates, and symbols.
+
 ---
 
 ## 🚀 Usage
 
-### 1. Basic Usage (Python)
-
+### Basic Conversion
 ```python
 from ckb_g2p import Converter
 
-# Initialize (Default: Stress=OFF, Pauses=ON, Normalization=ON)
+# Default: Normalization=ON, Pauses=ON, Stress=OFF
 converter = Converter()
 
 text = "کوردستان"
@@ -60,18 +60,14 @@ print(ipa)
 # Output: kuɾ.dɪs.tän
 ```
 
-### 2. Advanced TTS Configuration
-
-You can toggle specific features to match your TTS model's requirements.
+### TTS-Ready Output (With Stress)
+For training TTS models, you want explicit stress markers and pause tokens.
 
 ```python
-# Initialize with specific TTS options
-converter = Converter(
-    use_stress=True,        # Mark primary stress (ˈ)
-    use_pause_markers=True, # Convert punctuation to | and ||
-    normalize=True          # Use ckb-textify to clean text first
-)
+# Enable stress marking
+converter = Converter(use_stress=True, use_pause_markers=True)
 
+# Handles negative verbs correctly (Stress on first syllable)
 text = "نەچوو بۆ بازاڕ, لە ساڵی 1991."
 ipa = converter.syllabify(text)
 
@@ -79,43 +75,50 @@ print(ipa)
 # Output: ˈna.t̪͡ʃ̟uː bo̞ bä.ˈzäɾ | la sä.ˈɫiː ha.ˈzäɾ w no̞.ˈsad w na.ˈwa.du ˈjak ||
 ```
 
-### Configuration Parameters
+### Configuration Options
 
-| Parameter | Type | Default | Description |
+| Argument | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `use_stress` | `bool` | `False` | Adds `ˈ` to the stressed syllable. Smartly handles negative verbs. |
-| `use_pause_markers` | `bool` | `True` | Converts punctuation to IPA pause boundaries (`|` short, `||` long). |
-| `normalize` | `bool` | `True` | Uses `ckb-textify` to convert numbers, symbols, and Latin text before G2P. |
+| `use_stress` | `bool` | `False` | Adds primary stress marker (`ˈ`) to the appropriate syllable. |
+| `use_pause_markers` | `bool` | `True` | Converts punctuation to IPA boundaries (`\|` short, `\|\|` long). |
+| `normalize` | `bool` | `True` | Uses `ckb-textify` to convert numbers/symbols to text before processing. |
 
 ---
 
-## 🗣️ Phoneme Set
+## 🗣️ Phoneme Inventory
 
-To ensure high-quality audio generation, we use precise IPA notation to distinguish allophones:
+We use a precise IPA set to capture allophonic variations critical for natural speech synthesis.
 
-| Grapheme | Sound Type | IPA | Description |
+### Consonants (Key Distinctions)
+| Grapheme | IPA | Type | Description |
 | :--- | :--- | :--- | :--- |
-| **چ** | Standard | `t̪͡ʃ̟` | **Light / Dental:** Tongue touches teeth. |
-| **ج** | Standard | `d̪͡ʒ̟` | **Light / Dental:** Tongue touches teeth. |
-| **ک** | Palatalized | `t͡ʃ` | **Heavy / Postalveolar:** Like English "Chair". (Before `i`, `e`, `y`) |
-| **گ** | Palatalized | `d͡ʒ` | **Heavy / Postalveolar:** Like English "Jack". (Before `i`, `e`, `y`) |
+| **چ** | `t̪͡ʃ̟` | **Light (Dental)** | Standard "ch". Tongue tip touches teeth. |
+| **ک** | `t͡ʃ` | **Heavy (Postalveolar)** | Palatalized /k/ before front vowels (i, e, y). Like English "Chair". |
+| **ج** | `d̪͡ʒ̟` | **Light (Dental)** | Standard "j". Tongue tip touches teeth. |
+| **گ** | `d͡ʒ` | **Heavy (Postalveolar)** | Palatalized /g/ before front vowels. Like English "Jack". |
+| **ڵ** | `ɫ` | **Velarized** | "Dark L", distinct from clear `l`. |
+| **ڕ** | `r` | **Trill** | Rolled R, distinct from tap `ɾ`. |
+
+---
+
+## 🛠️ Customizing Pronunciation
+
+If the rule-based engine fails on a specific word (e.g., a foreign name), you can manually override it by editing `src/ckb_g2p/resources/exceptions.csv` inside the package or locally mapping exceptions before processing.
+
+
+
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Whether it's fixing a bug, improving phonological rules, or adding documentation, please feel free to submit a Pull Request on GitHub.
-
-1. Fork the project.
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
-4. Push to the branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request.
-
----
+Contributions are welcome! 
+1. Fork the repository.
+2. Create a feature branch.
+3. Submit a Pull Request.
 
 ## 👨‍💻 Author
 
 Developed by **Razwan M. Haji**.
 
-Special thanks to the open-source community and the contributors of `ckb-textify`, `eng-to-ipa`, and `anyascii`.
+Special thanks to the open-source community and the contributors of `ckb-textify`.

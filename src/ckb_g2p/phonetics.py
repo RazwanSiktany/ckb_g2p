@@ -19,7 +19,6 @@ class Phonetics:
     def normalize_initial_vowel(self, text: str) -> str:
         if not text: return text
         first_char = text[0]
-        # Only add Hamza if it is a pure vowel (excluding w/y)
         if first_char in VOWELS_WRITTEN and first_char not in ['و', 'ی', 'وو']:
              return "ئ" + text
         if first_char in ['ۆ', 'ێ', 'ە', 'ا']:
@@ -32,7 +31,6 @@ class Phonetics:
         length = len(chars)
         types = [''] * length
 
-        # --- PASS 1: Identify Knowns & Handle "وو" ---
         skip_next = False
         for i in range(length):
             if skip_next:
@@ -40,11 +38,10 @@ class Phonetics:
                 continue
             char = chars[i]
 
-            # Handle Double Waw "وو"
             if char == 'و' and i + 1 < length and chars[i+1] == 'و':
-                if i == 0: # Start of word: w + u
+                if i == 0: # Start of word
                     types[i] = 'C'; chars[i+1] = 'v_u'; types[i+1] = 'V'
-                else: # Medial: uː
+                else: # Medial
                     chars[i] = 'وو'; types[i] = 'V'; types[i+1] = 'X'
                 skip_next = True
                 continue
@@ -53,10 +50,8 @@ class Phonetics:
             elif char in VOWELS_WRITTEN: types[i] = 'V'
             else: types[i] = 'C'
 
-        # --- PASS 2: Rule 3 (Start of Word) ---
         if types[0] == '?': types[0] = 'C'
 
-        # --- PASS 3: Rule 2 (Neighbor Vowels) ---
         changed = True
         while changed:
             changed = False
@@ -78,7 +73,6 @@ class Phonetics:
                         types[i] = 'C'
                         changed = True
 
-        # --- PASS 4: Rule 1 (Sequence) ---
         for i in range(length):
             if types[i] == '?':
                 prev_type = 'C'
@@ -103,20 +97,17 @@ class Phonetics:
     def insert_bizroka(self, ipa_list: list) -> list:
         if not ipa_list: return []
 
-        # Rule 0: Isolated Single Consonant
         if len(ipa_list) == 1:
             if not self.is_ipa_vowel(ipa_list[0]):
                 ipa_list.append("ɪ")
                 return ipa_list
 
-        # --- Rule 1: Initial Cluster (CC...) ---
         if len(ipa_list) >= 2:
             c1, c2 = ipa_list[0], ipa_list[1]
             if not self.is_ipa_vowel(c1) and not self.is_ipa_vowel(c2):
                 if c2 not in ['w', 'j']:
                     ipa_list.insert(1, "ɪ")
 
-        # --- NEW RULE: Geminate Consonants (mm, tt) ---
         i = 0
         while i < len(ipa_list) - 1:
             c1 = ipa_list[i]
@@ -126,13 +117,11 @@ class Phonetics:
                 if i + 2 < len(ipa_list):
                     if self.is_ipa_vowel(ipa_list[i+2]):
                         has_following_vowel = True
-
                 if not has_following_vowel:
                     ipa_list.insert(i + 1, "ɪ")
                     i += 1 
             i += 1
 
-        # --- Rule 2: Medial Heavy Clusters (CCCC) ---
         i = 0
         while i < len(ipa_list) - 3:
             chunk = ipa_list[i: i + 4]
@@ -141,19 +130,14 @@ class Phonetics:
                 i += 2
             i += 1
 
-        # --- Rule 3: Final Cluster & Triple Cluster ---
         if len(ipa_list) >= 2:
             c_last = ipa_list[-1]
             c_prev = ipa_list[-2]
-
             if not self.is_ipa_vowel(c_last) and not self.is_ipa_vowel(c_prev):
-                # 1. Check Sonority Violation (Rising at end)
                 s_last = self.get_sonority(c_last)
                 s_prev = self.get_sonority(c_prev)
                 if s_last > s_prev:
                     ipa_list.insert(-1, "ɪ")
-
-                # 2. Check Triple Cluster (Length Violation)
                 elif len(ipa_list) >= 3:
                     c_pre_prev = ipa_list[-3]
                     if not self.is_ipa_vowel(c_pre_prev):

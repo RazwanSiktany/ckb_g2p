@@ -1,17 +1,32 @@
 # src/ckb_g2p/converter.py
 
 import re
+import csv
+import os
+from functools import lru_cache
 from .constants import IPA_MAP, SORTED_GRAPHEMES
 from .phonetics import Phonetics
 from .syllabifier import Syllabifier
 
-# Try to import ckb_textify
 try:
     from ckb_textify import convert_all
     HAS_TEXTIFY = True
 except ImportError:
     HAS_TEXTIFY = False
 
+# --- Load Exceptions Dictionary ---
+EXCEPTIONS = {}
+current_dir = os.path.dirname(os.path.abspath(__file__))
+csv_path = os.path.join(current_dir, 'resources', 'exceptions.csv')
+
+if os.path.exists(csv_path):
+    with open(csv_path, 'r', encoding='utf-8') as f:
+        reader = csv.reader(f)
+        next(reader, None) # Skip header
+        for row in reader:
+            if len(row) >= 2:
+                # Key: Word, Value: List of IPA symbols
+                EXCEPTIONS[row[0].strip()] = row[1].strip().split()
 
 class Converter:
     """
@@ -19,12 +34,6 @@ class Converter:
     """
 
     def __init__(self, use_stress: bool = False, use_pause_markers: bool = True, normalize: bool = True):
-        """
-        Args:
-            use_stress (bool): If True, adds IPA stress marker (ˈ).
-            use_pause_markers (bool): If True, converts punctuation to | and ||.
-            normalize (bool): If True, uses ckb-textify to clean text.
-        """
         self.use_stress = use_stress
         self.use_pause_markers = use_pause_markers
         self.should_normalize = normalize
@@ -34,7 +43,12 @@ class Converter:
         if self.should_normalize and not HAS_TEXTIFY:
             print("Warning: 'normalize' is set to True, but 'ckb-textify' is not installed.")
 
-    def text_to_ipa(self, text: str) -> list:
+    @lru_cache(maxsize=5000)
+    def text_to_ipa(self, text: str) -> tuple:
+        # 0. Check Exceptions Dictionary
+        if text in EXCEPTIONS:
+            return tuple(EXCEPTIONS[text])
+
         # 1. Normalize & Disambiguate
         text = self.phonetics.normalize_initial_vowel(text)
         text = self.phonetics.disambiguate_semi_vowels(text)
@@ -47,25 +61,20 @@ class Converter:
             char = text[i]
             match_found = False
 
-            # --- PALATALIZATION RULE ---
+            # Palatalization
             if char in ['ک', 'گ']:
                 context = text[i + 1:] if i + 1 < length else ""
                 should_palatalize = False
-
-                if context.startswith('وێ'): should_palatalize = True
-                elif context.startswith('ێ'): should_palatalize = True
-                elif context.startswith('ی'): should_palatalize = True
-                elif context.startswith('v_i'): should_palatalize = True
+                if context.startswith(('وێ', 'ێ', 'ی', 'v_i')):
+                    should_palatalize = True
 
                 if should_palatalize:
-                    if char == 'ک':
-                        ipa_output.append('t͡ʃ') # Heavy (Chair)
-                    else:
-                        ipa_output.append('d͡ʒ') # Heavy (Jack)
+                    if char == 'ک': ipa_output.append('t͡ʃ')
+                    else: ipa_output.append('d͡ʒ')
                     i += 1
                     continue
 
-            # --- Standard Greedy Mapping ---
+            # Standard Mapping
             for grapheme in SORTED_GRAPHEMES:
                 if text[i:].startswith(grapheme):
                     ipa_output.append(IPA_MAP[grapheme])
@@ -73,24 +82,20 @@ class Converter:
                     match_found = True
                     break
 
-            # --- Fallback ---
             if not match_found:
                 pass 
                 i += 1
 
-        # 2. Bizroka Insertion
-        ipa_output = self.phonetics.insert_bizroka(ipa_output)
-        return ipa_output
+        # 2. Bizroka
+        result = self.phonetics.insert_bizroka(ipa_output)
+        return tuple(result)
 
     def syllabify_word(self, word: str) -> str:
-        """
-        Helper: Converts one word to syllabified IPA.
-        """
-        ipa_list = self.text_to_ipa(word)
+        # Cache returns tuple, convert to list for syllabifier if needed 
+        # (though syllabifier generally iterates, so tuple is fine)
+        ipa_list = list(self.text_to_ipa(word))
 
-        # --- STRESS POSITION LOGIC ---
         stress_pos = 'final'
-        # Negative Verbs check
         if word.startswith(('نە', 'نا')):
             stress_pos = 'initial'
 
@@ -101,15 +106,9 @@ class Converter:
         )
 
     def syllabify(self, text: str) -> str:
-        """
-        Main Interface.
-        """
-        # 1. External Normalization (Full Sentence)
         if self.should_normalize and HAS_TEXTIFY:
-            # ckb-textify's convert_all handles full text (numbers -> text)
             text = convert_all(text)
 
-        # 2. Split into tokens
         raw_parts = re.split(r'([.,!?;:]+|\s+)', text)
         tokens = [t.strip() for t in raw_parts if t.strip()]
 

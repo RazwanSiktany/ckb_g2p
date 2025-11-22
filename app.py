@@ -16,12 +16,21 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- CUSTOM CSS FOR FONT ---
+# --- CUSTOM CSS FOR FONT & RTL ---
 st.markdown(
     """
     <style>
-    /* Target all text areas (Input and Output) */
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic&display=swap');
+
+    /* Apply font to input text areas */
     .stTextArea textarea {
+        font-family: 'Calibri', 'Noto Naskh Arabic', sans-serif !important;
+        font-size: 14px !important;
+        direction: rtl; /* Input should be RTL for Kurdish */
+    }
+
+    /* Apply font to output code blocks/text areas */
+    div[data-testid="stText"] {
         font-family: 'Calibri', sans-serif !important;
         font-size: 14px !important;
     }
@@ -32,35 +41,25 @@ st.markdown(
 
 # Header
 st.title("🗣️ Central Kurdish G2P")
+
 st.markdown("""
 Convert Central Kurdish (Sorani) text into **Syllabified IPA** (International Phonetic Alphabet).
 This tool is optimized for Text-to-Speech (TTS) datasets.
-
-* Powered by `ckb-textify` for normalization.
-* Handles **Palatalization** (Heavy vs Light Ch/J).
-* Handles **Stress** and **Pauses**.
 """)
+
+# Kurdish Description (Cleaned - No English mixing inside sentences)
+st.markdown("""
+<div style="direction: rtl; text-align: right; font-family: 'Noto Naskh Arabic', sans-serif;">
+ئەم ئەپڵیکەیشنە دەقی کوردی دەگۆڕێت بۆ فۆنێم و بڕگەکان. ئەمەش سوودی هەیە بۆ سیستەمەکانی دروستکردنی دەنگ.
+</div>
+""", unsafe_allow_html=True)
 
 # Sidebar Config
 st.sidebar.header("⚙️ Configuration")
 
-use_stress = st.sidebar.checkbox(
-    "Enable Stress Marking (ˈ)", 
-    value=True,
-    help="Adds primary stress marks. Detects negative verbs (Initial stress) vs Nouns (Final stress)."
-)
-
-use_pauses = st.sidebar.checkbox(
-    "Enable Pause Markers (|)", 
-    value=True,
-    help="Converts punctuation into IPA pause boundaries (| and ||)."
-)
-
-do_normalize = st.sidebar.checkbox(
-    "Enable Normalization", 
-    value=True,
-    help="Uses ckb-textify to convert numbers (1991), symbols ($), and Latin text to Kurdish phonemes."
-)
+use_stress = st.sidebar.checkbox("Enable Stress (ˈ)", value=True)
+use_pauses = st.sidebar.checkbox("Enable Pauses (|)", value=True)
+do_normalize = st.sidebar.checkbox("Enable Normalization", value=True)
 
 # Initialize Converter
 @st.cache_resource
@@ -71,33 +70,19 @@ converter = get_converter(use_stress, use_pauses, do_normalize)
 
 # Input Area
 text_input = st.text_area(
-    "Enter Kurdish Text:", 
+    "Enter Kurdish Text (دەقی کوردی بنووسە):", 
     value="سڵاو، ناوی من ئازادە. ساڵی 1991 لە دایک بووم.",
     height=150
 )
 
-if st.button("Syllabify Text", type="primary"):
+if st.button("Syllabify Text (گۆڕین)", type="primary"):
     if text_input.strip():
         try:
-            # Run Conversion
             ipa_output = converter.syllabify(text_input)
-
-            # Display Results
             st.subheader("🔤 IPA Output")
 
-            # Using text_area for wrapping output and easy copying
-            st.text_area(
-                label="Result", 
-                value=ipa_output, 
-                height=200, 
-                label_visibility="collapsed"
-            )
-
-            # Analysis Expander
-            with st.expander("ℹ️ Detailed Analysis"):
-                st.markdown(f"**Normalization Active:** `{do_normalize}`")
-                st.markdown(f"**Stress Active:** `{use_stress}`")
-                st.markdown(f"**Pause Markers:** `{use_pauses}`")
+            # Output Area (Force LTR for IPA, but keep font settings)
+            st.markdown(f'<textarea readonly style="width:100%; height:200px; font-family:Calibri; font-size:14px; direction:ltr; border-radius:5px; border:1px solid #ccc; padding:10px;">{ipa_output}</textarea>', unsafe_allow_html=True)
 
         except Exception as e:
             st.error(f"An error occurred: {e}")
@@ -106,4 +91,4 @@ if st.button("Syllabify Text", type="primary"):
 
 # Footer
 st.markdown("---")
-st.markdown("Developed by **Razwan M. Haji** | [GitHub Repo](https://github.com/RazwanSiktany/ckb_g2p) | [ckb-textify](https://ckb-textify.streamlit.app/)")
+st.markdown("Developed by **Razwan M. Haji** | [GitHub](https://github.com/RazwanSiktany/ckb_g2p) | [PyPI](https://pypi.org/project/ckb-g2p/)")
