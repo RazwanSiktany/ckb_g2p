@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ckb_g2p"
+version = "0.1.0"
+authors = [
+  { name = "Razwan", email = "your.email@example.com" },
+]
+description = "Central Kurdish Grapheme-to-Phoneme (G2P) converter and Syllabifier for TTS."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Text Processing :: Linguistic",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+]
+dependencies = [
+    "ckb-textify"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/RazwanSiktany/ckb_g2p"
+"Bug Tracker" = "https://github.com/RazwanSiktany/ckb_g2p/issues"
+"Demo" = "https://ckb-g2p.streamlit.app/"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ckb_g2p"]
