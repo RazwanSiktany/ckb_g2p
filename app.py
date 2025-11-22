@@ -71,7 +71,14 @@ if st.button("Syllabify Text", type="primary"):
 
             # Display Results
             st.subheader("🔤 IPA Output")
-            st.code(ipa_output, language="text")
+
+            # Using text_area for wrapping output and easy copying
+            st.text_area(
+                label="Result", 
+                value=ipa_output, 
+                height=200, 
+                label_visibility="collapsed"
+            )
 
             # Analysis Expander
             with st.expander("ℹ️ Detailed Analysis"):
@@ -86,4 +93,4 @@ if st.button("Syllabify Text", type="primary"):
 
 # Footer
 st.markdown("---")
-st.markdown("Developed by Razwan | [GitHub Repo](https://github.com/RazwanSiktany/ckb_g2p) | [ckb-textify](https://ckb-textify.streamlit.app/)")
+st.markdown("Developed by **Razwan M. Haji** | [GitHub Repo](https://github.com/RazwanSiktany/ckb_g2p) | [ckb-textify](https://ckb-textify.streamlit.app/)")

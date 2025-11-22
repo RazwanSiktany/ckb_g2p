@@ -29,7 +29,7 @@ This library handles the complex phonological rules that generic G2P tools miss:
     * *Example:* `ووشە` → `wu.ʃa`.
 4.  **Prosody & Stress (Configurable):**
     * **Noun/Adj:** Stress on final syllable (`ˈ`).
-    * **Negative Verbs:** Stress shifts to initial syllable (e.g., `نەچوو` → `ˈna.t͡ʃuː`).
+    * **Negative Verbs:** Stress shifts to initial syllable (e.g., `نەچوو` → `ˈna.t̪͡ʃ̟uː`).
 5.  **Foreign Text Support:**
     * Powered by [ckb-textify](https://github.com/RazwanSiktany/ckb_textify). Automatically converts numbers (`1991`), symbols (`$`), and English text to Kurdish phonemes before processing.
 
@@ -75,7 +75,7 @@ text = "نەچوو بۆ بازاڕ, لە ساڵی 1991."
 ipa = converter.syllabify(text)
 
 print(ipa)
-# Output: ˈna.t͡ʃuː bo̞ bä.ˈzäɾ | la sä.ˈɫiː ha.ˈzäɾ w no̞.ˈsad w na.ˈwa.du ˈjak ||
+# Output: ˈna.t̪͡ʃ̟uː bo̞ bä.ˈzäɾ | la sä.ˈɫiː ha.ˈzäɾ w no̞.ˈsad w na.ˈwa.du ˈjak ||
 ```
 
 ### Configuration Parameters
@@ -101,6 +101,20 @@ To ensure high-quality audio generation, we use precise IPA notation to distingu
 
 ---
 
-## 🤝 Acknowledgements
+## 🤝 Contributing
 
-Special thanks to the open-source community. This project relies on `ckb-textify` for text normalization.
+Contributions are welcome! Whether it's fixing a bug, improving phonological rules, or adding documentation, please feel free to submit a Pull Request on GitHub.
+
+1. Fork the project.
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
+
+---
+
+## 👨‍💻 Author
+
+Developed by **Razwan M. Haji**.
+
+Special thanks to the open-source community and the contributors of `ckb-textify`, `eng-to-ipa`, and `anyascii`.
