@@ -2,6 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/ckb_g2p.svg)](https://badge.fury.io/py/ckb_g2p)
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ckb-g2p.streamlit.app/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A linguistically accurate **Grapheme-to-Phoneme (G2P)** converter and **Syllabifier** for Central Kurdish (Sorani), designed specifically for modern Text-to-Speech (TTS) pipelines (VITS, FastSpeech2, etc.).
 
