@@ -1,6 +1,6 @@
 # Central Kurdish G2P (ckb_g2p)
 
-[![PyPI version](https://badge.fury.io/py/ckb_g2p.svg)](https://badge.fury.io/py/ckb_g2p)
+[![PyPI version](https://badge.fury.io/py/ckb_g2p.svg)](https://pypi.org/project/ckb-g2p/)
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ckb-g2p.streamlit.app/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -10,7 +10,7 @@ A linguistically accurate **Grapheme-to-Phoneme (G2P)** converter and **Syllabif
 
 | Project | Description | Links |
 | :--- | :--- | :--- |
-| **ckb_g2p** | Phonemizer & Syllabifier | [**Live G2P Demo**](https://ckb-g2p.streamlit.app/) • [GitHub](https://github.com/RazwanSiktany/ckb_g2p) |
+| **ckb_g2p** | Phonemizer & Syllabifier | [**Live G2P Demo**](https://ckb-g2p.streamlit.app/) • [GitHub](https://github.com/RazwanSiktany/ckb_g2p) • [PyPI](https://pypi.org/project/ckb-g2p/) |
 | **ckb-textify** | Text Normalizer (Prerequisite) | [**Live Normalizer Demo**](https://ckb-textify.streamlit.app/) • [GitHub](https://github.com/RazwanSiktany/ckb_textify) |
 
 ---

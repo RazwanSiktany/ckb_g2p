@@ -3,7 +3,6 @@ import sys
 import os
 
 # Import the library
-# If running locally from repo, we add src to path
 try:
     from ckb_g2p import Converter
 except ImportError:
@@ -15,6 +14,20 @@ st.set_page_config(
     page_title="Central Kurdish G2P",
     page_icon="🗣️",
     layout="centered"
+)
+
+# --- CUSTOM CSS FOR FONT ---
+st.markdown(
+    """
+    <style>
+    /* Target all text areas (Input and Output) */
+    .stTextArea textarea {
+        font-family: 'Calibri', sans-serif !important;
+        font-size: 14px !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
 )
 
 # Header
