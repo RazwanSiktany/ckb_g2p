@@ -1,0 +1,136 @@
+# ==========================================
+# Central Kurdish Phonology Configuration
+# Merged Logic: ckb_g2p (Mappings) + Asosoft (Sonority)
+# ==========================================
+
+# 1. Phoneme Inventory & Features
+# Sonority Scale: 1 (Stop) -> 6 (Glide) -> 7 (Vowel)
+phonemes:
+  # --- Vowels (Sonority 7) ---
+  ä:  { type: vowel, sonority: 7, description: "Short a (fat7a)" }
+  a:  { type: vowel, sonority: 7, description: "Schwa (e)" }
+  o̞:  { type: vowel, sonority: 7, description: "o" }
+  ɛ:  { type: vowel, sonority: 7, description: "ê" }
+  uː: { type: vowel, sonority: 7, description: "Long u (û)" }
+  iː: { type: vowel, sonority: 7, description: "Long i (î)" }
+  u:  { type: vowel, sonority: 7, description: "Short u" }
+  ɪ:  { type: vowel, sonority: 7, description: "Bizroka (Short i)" }
+  aː: { type: vowel, sonority: 7, description: "Long a (alif)" }
+  ʊʔ: { type: vowel, sonority: 7, description: "Damma+Hamza" }
+  ʔä: { type: vowel, sonority: 7, description: "Glottal+Short a" }
+  ẅ:  { type: vowel, sonority: 7, description: "Waw with dots (ۊ)" }
+
+  # --- Glides (Sonority 6) ---
+  w: { type: glide, sonority: 6 }
+  j: { type: glide, sonority: 6 }
+
+  # --- Liquids (Sonority 5) ---
+  l: { type: liquid, sonority: 5 }
+  ɫ: { type: liquid, sonority: 5, description: "Dark L" }
+  r: { type: liquid, sonority: 5, description: "Trilled R" }
+  ɾ: { type: liquid, sonority: 5, description: "Tapped R" }
+
+  # --- Nasals (Sonority 4) ---
+  m: { type: nasal, sonority: 4 }
+  n: { type: nasal, sonority: 4 }
+
+  # --- Fricatives (Sonority 3) ---
+  f: { type: fricative, sonority: 3 }
+  v: { type: fricative, sonority: 3 }
+  s: { type: fricative, sonority: 3 }
+  z: { type: fricative, sonority: 3 }
+  ʃ: { type: fricative, sonority: 3 }
+  ʒ: { type: fricative, sonority: 3 }
+  x: { type: fricative, sonority: 3 }
+  ɣ: { type: fricative, sonority: 3 }
+  h: { type: fricative, sonority: 3 }
+  ħ: { type: fricative, sonority: 3 }
+  ʕ: { type: fricative, sonority: 3 }
+
+  # --- Distinct Arabic/Loan Fricatives ---
+  θ:  { type: fricative, sonority: 3, description: "Tha (ث)" }
+  ð:  { type: fricative, sonority: 3, description: "Thal (ذ)" }
+  sˤ: { type: fricative, sonority: 3, description: "Sad (ص)" }
+  ðˤ: { type: fricative, sonority: 3, description: "Zah (ظ)" }
+
+  # --- Affricates (Sonority 2) ---
+  t͡ʃ:   { type: affricate, sonority: 2, description: "Heavy Ch" }
+  d͡ʒ:   { type: affricate, sonority: 2, description: "Heavy J" }
+  t̪͡ʃ̟: { type: affricate, sonority: 2, description: "Light Ch" }
+  d̪͡ʒ̟: { type: affricate, sonority: 2, description: "Light J" }
+
+  # --- Stops (Sonority 1) ---
+  p: { type: stop, sonority: 1 }
+  b: { type: stop, sonority: 1 }
+  t: { type: stop, sonority: 1 }
+  d: { type: stop, sonority: 1 }
+  k: { type: stop, sonority: 1 }
+  g: { type: stop, sonority: 1 }
+  q: { type: stop, sonority: 1 }
+  ʔ: { type: stop, sonority: 1 }
+
+  # --- Distinct Arabic/Loan Stops ---
+  tˤ: { type: stop, sonority: 1, description: "Ta (ط)" }
+  dˤ: { type: stop, sonority: 1, description: "Dhad (ض)" }
+
+# 2. Grapheme to Phoneme Map
+mappings:
+  # Digraphs
+  "وو": "uː"
+  "ئا": "ʔä"
+  "لا": "laː"
+  "v_i": "iː"
+  "v_u": "u"
+
+  # Standard Mappings
+  "ا": "ä"
+  "ە": "a"
+  "ۆ": "o̞"
+  "ێ": "ɛ"
+  "ی": "j"
+  "و": "w"
+  "ئ": "ʔ"
+  "ء": "ʔ"
+
+  # New Missing Mappings
+  "ؤ": "ʊʔ"  # Waw Hamza
+  "ى": "aː"  # Alif Maqsura
+  "ي": "j"   # Arabic Yeh
+
+  "ب": "b"
+  "پ": "p"
+  "ت": "t"
+  "د": "d"
+  "ج": "d̪͡ʒ̟"
+  "چ": "t̪͡ʃ̟"
+  "ح": "ħ"
+  "خ": "x"
+  "ر": "ɾ"
+  "ڕ": "r"
+  "ز": "z"
+  "ژ": "ʒ"
+  "س": "s"
+  "ش": "ʃ"
+  "ع": "ʕ"
+  "غ": "ɣ"
+  "ف": "f"
+  "ڤ": "v"
+  "ق": "q"
+  "ک": "k"
+  "ك": "k"
+  "گ": "g"
+  "ل": "l"
+  "ڵ": "ɫ"
+  "م": "m"
+  "ن": "n"
+  "ه": "h"
+  "ھ": "h"
+
+  # Distinct Mappings (Preserving Old Logic)
+  "ۊ": "ẅ"
+  "ث": "θ"
+  "ذ": "ð"
+  "ص": "sˤ"
+  "ض": "dˤ"
+  "ط": "tˤ"
+  "ظ": "ðˤ"

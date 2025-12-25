@@ -1,0 +1,9 @@
+Core Dependencies
+
+ckb-textify>=3.0.0
+pyyaml>=6.0
+
+App & Dev Dependencies
+
+streamlit>=1.30.0
+pytest>=7.0

@@ -1,0 +1,8 @@
+
+__pycache__/
+*.pyc
+.idea/
+.venv/
+dist/
+*.egg-info/
+lexicon.db
